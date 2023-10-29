@@ -102,7 +102,4 @@
         </div>
         <!-- / Content -->
 
-
-        <div class="content-backdrop fade">uwu vhjfkfjjfkjfjkfjkfkjfjfjk</div>
-    </div>
 @endsection

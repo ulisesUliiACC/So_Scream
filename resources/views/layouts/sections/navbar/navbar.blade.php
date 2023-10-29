@@ -16,7 +16,7 @@ $navbarDetached = ($navbarDetached ?? '');
       <!--  Brand demo (display only for navbar-full and hide on below xl) -->
       @if(isset($navbarFull))
       <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-        <a href="{{url('/')}}" class="app-brand-link gap-2">
+        <a href="{{url('/')}}" class="app-brand-link gap-4">
           <span class="app-brand-logo demo">
             @include('_partials.macros',["width"=>25,"withbg"=>'#696cff'])
           </span>
@@ -45,10 +45,7 @@ $navbarDetached = ($navbarDetached ?? '');
         <!-- /Search -->
         <ul class="navbar-nav flex-row align-items-center ms-auto">
 
-          <!-- Place this tag where you want the button to render. -->
-          <li class="nav-item lh-1 me-3">
-            <a class="github-button" href="https://github.com/themeselection/sneat-html-laravel-admin-template-free" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star themeselection/sneat-html-laravel-admin-template-free on GitHub">Star</a>
-          </li>
+         
 
           <!-- User -->
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -67,7 +64,7 @@ $navbarDetached = ($navbarDetached ?? '');
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <span class="fw-semibold d-block">John Doe</span>
+                      <span class="fw-semibold d-block">{{Auth::guard('admin')->user()->name}}</span>
                       <small class="text-muted">Admin</small>
                     </div>
                   </div>
@@ -77,7 +74,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="javascript:void(0);">
+                <a class="dropdown-item" href="profile">
                   <i class="bx bx-user me-2"></i>
                   <span class="align-middle">My Profile</span>
                 </a>
@@ -101,10 +98,15 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="javascript:void(0);">
+                <form method="POST" action="{{ route('admin.logout') }}">
+                  @csrf
+                <a class="dropdown-item" href="route('admin.logout')"
+                onclick="event.preventDefault();
+                      this.closest('form').submit();">
                   <i class='bx bx-power-off me-2'></i>
-                  <span class="align-middle">Log Out</span>
+                  <span class="align-middle">Salir</span>
                 </a>
+              </form>
               </li>
             </ul>
           </li>

@@ -163,7 +163,7 @@
 							<tbody>
                 @foreach (Cart::content() as $productos)
 								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
+									<td class="product-remove"><a href="{{route('remove-product',$productos->rowId)}}"><i class="far fa-window-close"></i></a></td>
 									<td class="product-image"><img src="{{ asset($productos->options->imagen) }}" alt="">
 									</td>
 									<td class="product-name">{{ $productos->name }}</td>

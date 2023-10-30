@@ -151,21 +151,23 @@
             <div class="container">
                 <div class="row product-lists">
                   @foreach ($productos as $producto)
-                    <div class="col-lg-4 col-md-6 text-center berry">
-                        <div class="single-product-item">
-                            <div class="product-image">
-                                <a href="single-product.html"><img src="{{ asset($producto->imagen) }}" alt="error de carga"></a>
-                            </div>
-                            <h3>{{ $producto->nombre_producto }}</h3>
-                            <p class="product-price"><span>Per Kg</span> {{ $producto->precio }} </p>
-                            <a href="#" class="cart-btn agregar-al-carrito" data-product-id="{{ $producto->id }}">
-                              <i class="fas fa-shopping-cart"></i> Add to Cart
-                          </a>
-
-
-                        </div>
-                    </div>
-                    @endforeach
+                          @if ($producto->estado)
+                              <div class="col-lg-4 col-md-6 text-center berry">
+                                  <div class="single-product-item">
+                                      <div class="product-image">
+                                          <a href="single-product.html"><img src="{{ asset($producto->imagen) }}"
+                                                  alt="error de carga"></a>
+                                      </div>
+                                      <h3>{{ $producto->nombre_producto }}</h3>
+                                      <p class="product-price"><span>Per Kg</span> {{ $producto->precio }} </p>
+                                      <a href="#" class="cart-btn agregar-al-carrito"
+                                          data-product-id="{{ $producto->id }}">
+                                          <i class="fas fa-shopping-cart"></i> Add to Cart
+                                      </a>
+                                  </div>
+                              </div>
+                          @endif
+                      @endforeach
                 </div>
             </div>
         </div>

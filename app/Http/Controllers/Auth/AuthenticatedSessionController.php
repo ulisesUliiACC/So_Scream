@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-
+use Gloudemans\Shoppingcart\Facades\Cart;
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -24,13 +24,27 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+{
+    $request->authenticate();
 
-        $request->session()->regenerate();
+    // Restaurar el carrito del usuario
+    if (Auth::check()) {
+        $user = Auth::user();
+        $userId = $user->id;
+        $cartIdentifier = 'user_' . $userId;
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // Utiliza el carrito del usuario
+        Cart::instance($cartIdentifier);
+
+        // Restaura el carrito si está almacenado en la base de datos
+        Cart::restore($cartIdentifier);
     }
+
+    $request->session()->regenerate();
+
+    return redirect()->intended(RouteServiceProvider::HOME);
+}
+
 
     /**
      * Destroy an authenticated session.
@@ -38,6 +52,7 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
+        //Cart::store('username');
 
         $request->session()->invalidate();
 

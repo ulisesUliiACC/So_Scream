@@ -18,159 +18,110 @@ class CarritoController extends Controller
 {
 
   public function __construct()
-    {
-        $this->middleware('auth'); // Aplica middleware de autenticación a todos los métodos del controlador
-    }
-  public function carrito()
-{
-    // Verificar si el usuario está autenticado
-    if (Auth::check()) {
-        // Obtener el identificador del usuario autenticado
-        $userId = Auth::user()->id;
-        $cartIdentifier = 'user_' . $userId;
-
-        // Utilizar el carrito del usuario
-        Cart::instance($cartIdentifier);
-
-        // Obtener los elementos del carrito
-        $cartItems = Cart::content();
-
-        return view('shop.cart.carrito', compact('cartItems'));
-    }
-
-    // Si el usuario no está autenticado, puedes redirigirlo a la página de inicio de sesión
-    return redirect('/login')->with('error', 'Debes iniciar sesión para ver tu carrito de compras.');
-}
-
+  {
+    $this->middleware('auth'); // Aplica middleware de autenticación a todos los métodos del controlador
+  }
   public function index()
   {
 
     $productos = Producto::where('estado', true)->get();
-    $products = Producto::all();
-    return view('shop.shop', compact('productos', 'products', ));
+    return view('shop.shop', compact('productos'));
+
   }
-
-
-
-
-
-
-  public function addToCart($id)
-  {
-      // Verificar si el usuario está autenticado
-      if (Auth::check()) {
-          $producto = Producto::findOrFail($id);
-
-          // Obtener el identificador del usuario autenticado
-          $userId = Auth::user()->id;
-          $cartIdentifier = 'user_' . $userId;
-
-          // Utilizar el carrito del usuario
-          Cart::instance($cartIdentifier);
-
-          // Verificar si el carrito ya está almacenado en la base de datos
-          $cartStored = Cart::content()->count() > 0;
-
-          if ($cartStored) {
-              // Si el carrito ya está almacenado, restaura su contenido
-              Cart::restore($cartIdentifier);
-          }
-
-          // Verificar si el producto ya está en el carrito
-          $existingItem = Cart::search(function ($cartItem, $rowId) use ($id) {
-              return $cartItem->id == $id;
-          });
-
-          if ($existingItem->isNotEmpty()) {
-              // Si el producto ya está en el carrito, aumentar la cantidad
-              $cartItem = $existingItem->first();
-              Cart::update($cartItem->rowId, $cartItem->qty + 1);
-          } else {
-              // Agregar el producto al carrito
-              Cart::add([
-                  'id' => $producto->id,
-                  'name' => $producto->nombre_producto,
-                  'price' => $producto->precio,
-                  'qty' => 1,
-                  'weight' => 0,
-                  'options' => [
-                      'imagen' => $producto->imagen,
-                  ]
-              ]);
-          }
-
-          // Guardar el carrito en la base de datos con el identificador del usuario
-          Cart::store($cartIdentifier);
-
-          // Puedes regresar una respuesta JSON u otra vista según tus necesidades
-          return response()->json(['message' => 'Producto agregado al carrito con éxito.']);
-      } else {
-          // Si el usuario no está autenticado, envía un mensaje de error y código de respuesta 401 (No autorizado)
-          return response()->json(['message' => 'Debes iniciar sesión para agregar productos al carrito.'], 401);
-      }
-  }
-
-
-  public function mostrarCarrito()
+// Controlador para gestionar el carrito
+public function carrito()
 {
-    // Verificar si el usuario está autenticado
     if (Auth::check()) {
-        // Obtener el identificador del usuario autenticado
-        $userId = Auth::user()->id;
-        $cartIdentifier = 'user_' . $userId;
-
-        // Utilizar el carrito del usuario
-        Cart::instance($cartIdentifier);
-
-        // Verificar si el carrito ya está almacenado en la base de datos y restaurarlo si es necesario
-        if (Cart::stored($cartIdentifier)) {
-            Cart::restore($cartIdentifier);
-        }
-
-        // Obtener los elementos del carrito
-        $items = Cart::content();
-
-        return view('carrito', compact('items'));
+        // Usuario autenticado
+        $cart = Cart::instance('user_' . Auth::user()->id);
+        $cartItems = $cart->content();
     } else {
-        // Si el usuario no está autenticado, puedes redirigirlo a una página de inicio de sesión o mostrar un mensaje de que deben iniciar sesión.
-        return redirect()->route('login');
+        // Usuario no autenticado
+        $cartItems = session()->get('cart', []);
     }
+
+    return view('shop.cart.carrito', compact('cartItems'));
 }
 
+public function addToCart(Request $request, $productId)
+{
+    // Obtén los detalles del producto desde la base de datos
+    $producto = Producto::find($productId);
 
+    if (!$producto) {
+        return redirect()->route('shop.shop')->with('error', 'Producto no encontrado');
+    }
 
+    // Verifica si el usuario está autenticado
+    if (Auth::check()) {
+        // Usuario autenticado
+        $cart = Cart::instance('user_' . Auth::user()->id);
+    } else {
+        // Usuario no autenticado
+        $cart = session()->get('cart', []);
+    }
 
+    // Agregar productos al carrito
+    $cart->add([
+        'id' => $producto->id,
+        'name' => $producto->nombre_producto,
+        'price' => $producto->precio,
+        'weight' => 0,
+        'qty' => 1,
+        'options' => [
+            'imagen' => $producto->imagen,
+        ],
+    ]);
 
-  public function qtyIncrement($id)
-  {
+    if (Auth::check()) {
+        // Si el usuario está autenticado, guarda el carrito en la base de datos
+        $cart->store('user_' . Auth::user()->id);
+    } else {
+        // Si el usuario no está autenticado, guarda el carrito en la sesión
+        session()->put('cart', $cart->content());
+    }
 
-    $producto = Cart::get($id);
-    $updateQty = $producto->qty + 1;
-    //dd($updateQty);
-    Cart::update($id, $updateQty);
+    return redirect()->route('shop.shop')->with('success', 'Producto agregado al carrito');
+}
 
-    return redirect()->back();
-  }
+public function qtyIncrement($rowId)
+{
+    $cart = Cart::instance('user_' . Auth::user()->id);
+    $producto = $cart->get($rowId);
 
-  public function qtyDecrement($id)
-  {
-    $producto = Cart::get($id);
-    $updateQty = $producto->qty - 1;
-    if ($updateQty > 0) {
-      Cart::update($id, $updateQty);
+    if ($producto) {
+        $updateQty = $producto->qty + 1;
+        $cart->update($rowId, $updateQty);
     }
 
     return redirect()->back();
+}
 
-  }
+public function qtyDecrement($rowId)
+{
+    $cart = Cart::instance('user_' . Auth::user()->id);
+    $producto = $cart->get($rowId);
 
-  public function removeProduct($id)
-  {
-    Cart::remove($id);
+    if ($producto) {
+        $updateQty = $producto->qty - 1;
+        if ($updateQty > 0) {
+            $cart->update($rowId, $updateQty);
+        }
+    }
+
     return redirect()->back();
-  }
+}
 
-//
+public function removeProduct($rowId)
+{
+    $cart = Cart::instance('user_' . Auth::user()->id);
+    $cart->remove($rowId);
+    $cart->store('user_' . Auth::user()->id); // Guardar cambios en la base de datos
+
+    return redirect()->back();
+}
+
+  //
 //  public function getTotal()
 //  {
 //

@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-
+use Illuminate\Http\RedirectResponse;
+use Gloudemans\Shoppingcart\Facades\Cart;
 class LoginRequest extends FormRequest
 {
     /**
@@ -50,6 +51,15 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+
+        // Restaurar el carrito del usuario
+        $user = Auth::user();
+        $userId = $user->id;
+        $cartIdentifier = 'user_' . $userId;
+
+        Cart::restore($cartIdentifier);
+        Cart::store($cartIdentifier);
     }
 
     /**

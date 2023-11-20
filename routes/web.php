@@ -6,6 +6,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\Carrito\CarritoController;
+use App\Http\Controllers\Gateways\PaypalController;
+use App\Http\Controllers\RolController;
+use App\Http\Controllers\NewAdmins\NewAdminsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +30,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('about',[DashboardController::class,'about'])->name('about');
+Route::get('Contato',[DashboardController::class,'contacto'])->name('Contacto');
 Route::get('/productos',[CarritoController::class,'index'])->name('shop.shop');
 
 Route::middleware('auth')->group(function () {
@@ -78,6 +82,8 @@ Route::middleware('auth:admin')->group(function (){
 
 
     Route::get('/checkout',[DashboardController::class,'checkout'])->name('checkout');
+    Route::view('/compra/success', 'compra.success')->name('compra.success');
+
     });
     /* ruta fin de usuario */
 

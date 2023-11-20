@@ -33,9 +33,6 @@ class RestoreCartOnLogin
 
     $user = $event->user;
     $cartIdentifier = 'user_' . $user->id;
-
-
-
     // Restaurar el carrito
     Cart::restore($cartIdentifier);
 }

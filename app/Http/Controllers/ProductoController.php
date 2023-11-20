@@ -154,7 +154,7 @@ class ProductoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Producto $id)
+    public function destroy($id)
     {
         $id->delete();
         return redirect()->route('productos.index');

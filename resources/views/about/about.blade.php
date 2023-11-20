@@ -62,7 +62,7 @@
 								<li><a href="{{url('/')}}">Inicio</a></li>
 								<li><a href="about.html">Nosotros</a></li>
 								<li><a href="news.html">Blog</a>
-								<li><a href="contact.html">Contacto</a></li>
+								<li><a href="{{route('Contacto')}}">Contacto</a></li>
 									<ul class="sub-menu">
 										<li><a href="news.html">News</a></li>
 										<li><a href="single-news.html">Single News</a></li>

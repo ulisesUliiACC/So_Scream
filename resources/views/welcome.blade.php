@@ -7,7 +7,7 @@
 	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
-	<title>IMBA | So-Cream</title>
+	<title>IMBA | So-Cream  </title>
 
 	<!-- favicon -->
 	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
@@ -59,7 +59,7 @@
 					<!-- menu start -->
 <nav class="main-menu">
   <ul>
-      <li><a href="{{url('/')}}">Inicio</a></li>
+      <li><a href="{{url('/')}}">Inicio </a></li>
       <li><a href="{{route('about')}}">Nosotros</a></li>
       <li><a href="news.html">Blog</a></li>
       <li><a href="contact.html">Contacto</a></li>

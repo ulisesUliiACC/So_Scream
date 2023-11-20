@@ -69,7 +69,7 @@
 							<ul>
 								<li><a href="{{url('/')}}">Inicio</a></li>
 								<li><a href="{{route('about')}}">Nosotros</a></li>
-								<li><a href="news.html">Blog</a>
+								<li><a href="">Blog</a>
 								<li><a href="contact.html">Contacto</a></li>
 								<ul class="sub-menu">
 									<li><a href="news.html">News</a></li>
@@ -230,7 +230,7 @@
 							<tbody class="checkout-details">
                 <tr>
 									<td>Sub total </td>
-									<td>$ {{ Cart::priceTotal()}}</td>
+									<td>${{ Cart::total() }}</td>
 								</tr>
 								<tr>
 									<td>precion de envio</td>

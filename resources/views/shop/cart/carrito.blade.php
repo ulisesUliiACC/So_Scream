@@ -212,8 +212,9 @@
 								</tr>
 								<tr class="total-data">
 									<td><strong>Total: </strong></td>
-									<td>${{ Cart::priceTotal() }}</td>
+                  <td>${{Cart::priceTotal()}}</td>
 								</tr>
+                <td>${{Cart::priceTotal()}}</td>
 							</tbody>
 						</table>
 						<div class="cart-buttons">

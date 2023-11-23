@@ -1,6 +1,6 @@
 @extends('layouts/blankLayout')
 
-@section('title', 'ulises')
+@section('title', 'IMBA | So-Cream')
 
 
 @section('content')

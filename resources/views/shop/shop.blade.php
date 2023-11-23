@@ -66,15 +66,9 @@
                             <nav class="main-menu">
                                 <ul>
                                     <li class="current-list-item"><a href="{{url('/')}}">Home</a> </li>
-                                    <li><a href="about.html">About</a></li>
-                                    <li><a href="#">Pages</a></li>
-                                    <li><a href="news.html">News</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="news.html">News</a></li>
-                                            <li><a href="single-news.html">Single News</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="{{route('about')}}">About</a></li>
+
+                                    <li><a href="{{route('Contacto')}}">Contact</a></li>
                                     <li><a href="{{ route('shop.shop') }}">Shop</a>
                                     </li>
                                     <li>
@@ -155,7 +149,7 @@
                               <div class="col-lg-4 col-md-6 text-center berry">
                                   <div class="single-product-item">
                                       <div class="product-image">
-                                          <a href="single-product.html"><img src="{{ asset($producto->imagen) }}"
+                                          <a href=""><img src="{{ asset($producto->imagen) }}"
                                                   alt="error de carga"></a>
                                       </div>
                                       <h3>{{ $producto->nombre_producto }}</h3>
@@ -165,7 +159,7 @@
                                           <i class="fas fa-shopping-cart"></i> Add to Cart
                                       </a>
                                   </div>
-                              </div>
+                              </div>x
                           @endif
                       @endforeach
                 </div>

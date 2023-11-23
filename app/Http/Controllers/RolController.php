@@ -10,20 +10,22 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permissions\Models\Permission as ContractsPermission;
 
+
 class RolController extends Controller
 {
+  function __construct()
+  {
+       $this->middleware('permission:ver-rol|crear-rol|editar-rol|borrar-rol', ['only' => ['index']]);
+       $this->middleware('permission:crear-rol', ['only' => ['create','store']]);
+       $this->middleware('permission:editar-rol', ['only' => ['edit','update']]);
+       $this->middleware('permission:borrar-rol', ['only' => ['destroy']]);
+  }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    function __construct()
-    {
-        $this->middleware('permission:ver-rol|crear-rol|editar-rol|borrar-rol', ['only'=>['index']]);
-        $this->middleware('permission:crear-rol', ['only'=>['create','store']]);
-        $this->middleware('permission:editar-rol', ['only'=>['edit','update']]);
-        $this->middleware('permission:borrar-rol', ['only'=>['destroy']]);
-    }
+
 
     public function index()
     {
@@ -54,34 +56,37 @@ class RolController extends Controller
 
      public function store(Request $request)
      {
-         $this->validate($request, [
-             'name' => 'required|unique:roles,name',
-             'permissions' => 'required|array',
-         ]);
-     
-         // Obtén los IDs de permisos seleccionados en el formulario
-         $permissionIds = $request->input('permissions');
-     
-         // Filtra los IDs de permisos para asegurarte de que existan en la base de datos
-         $existingPermissions = Permission::whereIn('id', $permissionIds)->get();
-     
-         // Verifica si todos los permisos seleccionados existen
-         if ($existingPermissions->count() !== count($permissionIds)) {
-             // Alguno de los permisos seleccionados no existe en la base de datos
-             return redirect()->back()->with('error', 'Alguno de los permisos seleccionados no existe.');
-         }
-     
-         // Crea el rol
-         $role = Role::create(['name' => $request->input('name')]);
-     
-         // Asigna los permisos al rol
-         $role->syncPermissions($permissionIds);
-     
-         return redirect()->route('roles.index')->with('success', 'Rol creado con éxito.');
+
+
+      $this->validate($request, [
+        'name' => 'required|unique:roles,name',
+        'permissions' => 'required|array',
+    ]);
+
+    // Obtén los IDs de permisos seleccionados en el formulario
+    $permissionIds = $request->input('permissions');
+
+    // Filtra los IDs de permisos para asegurarte de que existan en la base de datos
+    $existingPermissions = Permission::whereIn('id', $permissionIds)->get();
+
+    // Verifica si todos los permisos seleccionados existen
+    if ($existingPermissions->count() !== count($permissionIds)) {
+        // Alguno de los permisos seleccionados no existe en la base de datos
+        return redirect()->back()->with('error', 'Alguno de los permisos seleccionados no existe.');
+    }
+
+    // Crea el rol
+    $role = Role::create(['name' => $request->input('name')]);
+
+    // Asigna los permisos al rol
+    $role->syncPermissions($permissionIds);
+
+    return redirect()->route('roles.index')->with('success', 'Rol creado con éxito.');
+
      }
-     
-    
-    
+
+
+
     /**
      * Display the specified resource.
      *
@@ -135,6 +140,6 @@ class RolController extends Controller
     public function destroy(Role $id)
     {
         $id->delete();
-        return redirect()->route('roles.index');
+        return redirect()->route('admin_roles.index');
     }
 }

@@ -24,6 +24,7 @@
         </div>
       <button class="button-submit">Sign In</button>
       <p class="p">No tienes cuenta<span class="span"><a href="{{route('register')}}">Crear una nueva :)</a></span>
+        <p class="p">olivastee tu password<span class="span"><a href="{{route('')}}">Crear una nueva :)</a></span>
 
       </p><p class="p line">Or With</p>
 </form>

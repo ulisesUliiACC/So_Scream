@@ -62,34 +62,48 @@
 						</div>
 						<!-- logo -->
 
-						<!-- menu start -->
-						<nav class="main-menu">
-							<ul>
-								<li><a href="{{url('/')}}">Inicio</a></li>
-								<li><a href={{route('about')}}>Nosotros</a></li>
-								<li><a href="news.html">Blog</a>
-								<li><a href="{{route('Contacto')}}">Contacto</a></li>
-								<ul class="sub-menu">
-									<li><a href="news.html">News</a></li>
-									<li><a href="single-news.html">Single News</a></li>
-								</ul>
-								</li>
+					<!-- menu start -->
+          <nav class="main-menu">
+            <ul>
+                <li><a href="{{ url('/') }}">Inicio </a></li>
+                <li><a href="{{ route('about') }}">Nosotros</a></li>
+                <li><a href="news.html">Blog</a></li>
+                <li><a href="{{ route('Contacto') }}">Contacto</a></li>
+                <li><a href="{{ route('shop.shop') }}">Shop</a></li>
+                <li>
+                    <div class="header-icons">
+                        <a class="shopping-cart" href="{{ route('cart.carrito') }}"><i
+                                class="fas fa-shopping-cart"></i></a>
+                        <a class="user-icon" id="user-icon"><i class='fas fa-user'></i></a>
+                        <!-- Opciones de usuario -->
+                        <div class="user-options" id="user-options">
+                            <ul>
 
-								<li><a href="{{route('shop.shop')}}">Shop</a>
-								</li>
-								<li>
-									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i
-												class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i
-												class="fas fa-search"></i></a>
-									</div>
-								</li>
-							</ul>
-						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-						<div class="mobile-menu"></div>
-						<!-- menu end -->
+                              @if (!Auth::check())
+                              <li><a href="{{ route('login') }}">Iniciar sesión</a></li>
+                          @endif
+                                <li><a href="{{route('profile.edit')}}">Perfil</a></li>
+                                <li>
+                                  @if (Auth::check())
+                                  <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                  <li><a  href="{{route('logout')}}" onclick="event.preventDefault();
+                                    this.closest('form').submit();">Cerrar sesión</a></li>
+                                  </form>
+                                  @endif
+                                </li>
+
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+        <div class="mobile-menu"></div>
+        <!-- menu end -->
 					</div>
 				</div>
 			</div>
@@ -142,18 +156,19 @@
 					</div>
 					<div id="form_status"></div>
 					<div class="contact-form">
-						<form type="POST" id="fruitkha-contact" onSubmit="return valid_datas( this );">
+						<form method="POST" action="{{ route('productos.store') }}" id="fruitkha-contact">
+              			@csrf
 							<p>
 								<input type="text" placeholder="Nombre" name="name" id="name">
 								<input type="email" placeholder="Correo electrónico" name="email" id="email">
 							</p>
 							<p>
-								<input type="tel" placeholder="Teléfono" name="phone" id="phone">
-								<input type="text" placeholder="Asunto" name="subject" id="subject">
+								<input type="tel" placeholder="Teléfono" name="telefono" id="phone">
+								<input type="text" placeholder="Asunto" name="asunto" id="subject">
 							</p>
 							<p><textarea name="message" id="message" cols="30" rows="10"
 									placeholder="Mensaje"></textarea></p>
-							<input type="hidden" name="token" value="FsWga4&@f6aw" />
+							<input type="hidden" name="mensaje" value="FsWga4&@f6aw" />
 							<p><input type="submit" value="Enviar"></p>
 						</form>
 					</div>
@@ -297,3 +312,23 @@
 
 </html>
 @endsection
+<script>
+  document.getElementById('user-icon').addEventListener('click', function() {
+      var userOptions = document.getElementById('user-options');
+      if (userOptions.style.display === 'none' || userOptions.style.display === '') {
+          userOptions.style.display = 'block';
+      } else {
+          userOptions.style.display = 'none';
+      }
+  });
+
+  // Cerrar las opciones de usuario si se hace clic fuera de ellas
+  document.addEventListener('click', function(event) {
+      var userOptions = document.getElementById('user-options');
+      var userIcon = document.getElementById('user-icon');
+
+      if (event.target !== userIcon && event.target !== userOptions) {
+          userOptions.style.display = 'none';
+      }
+  });
+</script>

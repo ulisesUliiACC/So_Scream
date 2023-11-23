@@ -127,48 +127,22 @@
 
       <thead class="table-light">
         <tr>
+          <th>ID</th>
           <th>Nombre del rol</th>
           <th>Acciones de rol</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
-        @foreach ($roles as $role)
+         @foreach ($roles as $role)
         <tr>
-            <td>
-                <i class="fab fa-angular fa-lg text-danger me-3"></i>
-                <strong>{{ $role->name }}</strong>
-            </td>
+            <td>{{ ++$i }}</td>
+            <td>{{ $role->name }}</td>
+            <td class="table-report__action w-56">
 
-            <td>
-              @if ($roles->isEmpty())
-              <tr>
-                  <td colspan="3">
-                      <span>No hay roles definidos. El usuario es un superadmin por defecto.</span>
-                  </td>
-              </tr>
-          @else
-                    <ul>
-                        @foreach ($role->permissions as $permission)
-                            <li>{{ $permission->name }}</li>
-                        @endforeach
-                    </ul>
-                @endif
-            </td>
-
-            <td>
-                <div class="dropdown">
-                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
-                    </div>
-                </div>
             </td>
         </tr>
     @endforeach
-
-
       </tbody>
     </table>
   </div>

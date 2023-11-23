@@ -90,6 +90,7 @@
                                 <a class="flex items-center mr-3 " href="{{ route('productos.edit', $producto->id) }}">
                                     <i class="bx bx-edit-alt me-2 "></i> Edit
                                 </a>
+
                                 <form action="{{ route('productos.destroy', $producto->id) }}" method="POST"
                                     class="formEliminar">
                                     @csrf

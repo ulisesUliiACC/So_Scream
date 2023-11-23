@@ -29,28 +29,24 @@ class CarritoController extends Controller
 
   public function addToCart($id)
   {
-      $productos = Producto::findOrFail($id);
+      $producto = Producto::findOrFail($id);
 
       if (auth()->check()) {
           // Si el usuario está autenticado, usa el carrito gestionado por el paquete
           Cart::add([
-              'id' => $productos->id,
-              'name' => $productos->nombre_producto,
-              'price' => $productos->precio,
+              'id' => $producto->id,
+              'name' => $producto->nombre_producto,
+              'price' => $producto->precio,
               'weight' => 0,
               'qty' => 1,
               'options' => [
-                  'imagen' => $productos->imagen,
+                  'imagen' => $producto->imagen,
               ]
           ]);
-      } else {
-          // Si el usuario no está autenticado, guarda el producto en la tabla 'carrito'
-          Carrito::create([
-              'user_id' => null, // Indica que el usuario no está autenticado
-              'producto_id' => $productos->id,
-              'cantidad' => 1,
-              'precio' => $productos->precio,
-          ]);
+
+          // Obtén el contenido actual del carrito y guárdalo en la sesión
+          $cartItems = Cart::content()->toArray();
+          session(['cart_items' => $cartItems]);
       }
 
       $response = [
@@ -59,6 +55,10 @@ class CarritoController extends Controller
 
       return response()->json($response);
   }
+
+
+
+
 
 
   public function qtyIncrement($id)

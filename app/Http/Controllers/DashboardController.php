@@ -24,12 +24,18 @@ class DashboardController extends Controller
     return view('shop.checkout.index');
   }
 
-  public function contacto(){
-    return view('Contacto.index');
+  public function blog(){
+
+    return view('blog.index');
   }
 
   public function success(){
     return view('compra.Success');
+  }
+
+
+  public function pedidos(){
+    return view('pedidos.index');
   }
 
 }

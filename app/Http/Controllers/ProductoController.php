@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 use App\Models\Producto;
 use Carbon\Carbon;
+use Spatie\Permission\Traits\HasRoles;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -68,13 +70,13 @@ class ProductoController extends Controller
         $Producto->fecha_activo = Carbon::parse($request->input('fecha_activo'));
         $Producto->fecha_limite = Carbon::parse($request->input('fecha_limite'));
 
-
         if ($request->hasFile('imagen')) {
-            $imagen = $request->file('imagen');
-            $imagenNombre = time() . '_' . $imagen->getClientOriginalName();
-            $imagen->storeAs('public/imagenes', $imagenNombre); // Almacenar en storage/app/public/imagenes
-            $Producto->imagen = 'storage/imagenes/' . $imagenNombre; // Ruta incorrecta, debe ser 'imagenes/'
-        }
+          $imagen = $request->file('imagen');
+          $imagenNombre = time() . '_' . $imagen->getClientOriginalName();
+          $imagen->storeAs('public/imagenes', $imagenNombre); // Almacenar en storage/app/public/imagenes
+          $Producto->imagen = 'imagenes/' . $imagenNombre; // Ruta para la base de datos
+      }
+
 
 
         $Producto->save();
@@ -136,12 +138,13 @@ class ProductoController extends Controller
 
         $producto->fecha_activo = Carbon::parse($request->input('fecha_activo'));
         $producto->fecha_limite = Carbon::parse($request->input('fecha_limite'));
+
         if ($request->hasFile('imagen')) {
-            $imagen = $request->file('imagen');
-            $imagenNombre = time() . '_' . $imagen->getClientOriginalName();
-            $imagen->storeAs('public/imagenes', $imagenNombre);
-            $producto->imagen = 'storage/imagenes/' . $imagenNombre;
-        }
+          $imagen = $request->file('imagen');
+          $imagenNombre = time() . '_' . $imagen->getClientOriginalName();
+          $imagen->storeAs('public/imagenes', $imagenNombre); // Almacenar en storage/app/public/imagenes
+          $producto->imagen = 'storage/imagenes/' . $imagenNombre; // Ruta incorrecta, debe ser 'imagenes/'
+      }
 
         $producto->save();
 
@@ -155,8 +158,15 @@ class ProductoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        $id->delete();
-        return redirect()->route('productos.index');
+{
+    $producto = Producto::find($id);
+
+    if ($producto) {
+        $producto->delete();
+        return redirect()->route('productos.index')->with('success', 'Producto eliminado exitosamente');
+    } else {
+        return redirect()->route('productos.index')->with('error', 'No se pudo encontrar el producto');
     }
+}
+
 }

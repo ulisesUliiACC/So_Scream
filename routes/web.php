@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\Carrito\CarritoController;
+use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\Gateways\PaypalController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\NewAdmins\NewAdminsController;
@@ -30,7 +31,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('about',[DashboardController::class,'about'])->name('about');
-Route::get('Contato',[DashboardController::class,'contacto'])->name('Contacto');
+//Route::get('Contato',[DashboardController::class,'contacto'])->name('Contacto');
 Route::get('/productos',[CarritoController::class,'index'])->name('shop.shop');
 
 Route::middleware('auth')->group(function () {
@@ -84,11 +85,19 @@ Route::middleware('auth:admin')->group(function (){
     Route::get('/checkout',[DashboardController::class,'checkout'])->name('checkout');
     Route::view('/compra/success', 'compra.success')->name('compra.success');
 
+    Route::get('/pedidos',[DashboardController::class,'pedidos'])->name('pedidos');
+
     });
+
+    Route::get('/Contacto',[ContactoController::class,'contacto'])->name('Contacto');
+    Route::post('/Contacto',[DashboardController::class,'FormularioContacto'])->name('Contacto');
+    Route::get('/blog',[DashboardController::class,'blog'])->name('blog');
     /* ruta fin de usuario */
 
 
-
+    Route::fallback(function(){
+      return view('errors.404');
+    });
 
 
 require __DIR__.'/auth.php';

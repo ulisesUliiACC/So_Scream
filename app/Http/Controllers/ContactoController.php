@@ -7,7 +7,11 @@ use App\Models\Contacto;
 
 class ContactoController extends Controller
 {
-    function contacto(Request $request){
+
+  public function contacto(){
+    return view('Contacto.index');
+  }
+    public function Formulariontacto(Request $request){
 
 
       $contacto  =new Contacto();
@@ -20,6 +24,6 @@ class ContactoController extends Controller
 
       $contacto->save();
 
-      return redirect()->route('Contacto');
+      return redirect()->route('Contacto.index')->with(['mensaje' => 'Nos comunicaremos con usted lo más pronto posible']);
     }
 }

@@ -15,14 +15,13 @@ class SuperAdminSeeder extends Seeder
      */
     public function run()
     {
-        //Admin::truncate();
-
         Admin::create([
             'name' => 'Super Admin',
             'email' => 'ulisess@test.com',
-            'telefono'=>55445,
+            'telefono' => 55445,
             'password' => bcrypt('ulises2415'),
-
         ]);
+
+        $this->command->info('Super Admin creado exitosamente.');
     }
 }

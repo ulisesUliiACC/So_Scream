@@ -1,3 +1,9 @@
+@extends('layouts/blankLayout')
+
+@section('title', 'IMBA | So-Cream')
+
+
+@section('content')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,48 +62,48 @@
 						</div>
 						<!-- logo -->
 
-						<!-- menu start -->
-						<nav class="main-menu">
-							<ul>
-								<li><a href="{{url('/')}}">Inicio</a></li>
-								<li><a href="about.html">Nosotros</a></li>
-								<li><a href="news.html">Blog</a>
-								<li><a href="{{route('Contacto')}}">Contacto</a></li>
-									<ul class="sub-menu">
-										<li><a href="news.html">News</a></li>
-										<li><a href="single-news.html">Single News</a></li>
-									</ul>
-								</li>
-								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a href="404.html">404 page</a></li>
-										<li><a href="about.html">About</a></li>
-										<li><a href="cart.html">Cart</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
-										<li><a href="contact.html">Contact</a></li>
-										<li><a href="news.html">News</a></li>
-										<li><a href="{{route('shop.shop')}}">Shop</a></li>
-									</ul>
-								</li>
-								<li><a href="{{route('shop.shop')}}">Shop</a>
-									<ul class="sub-menu">
-										<li><a href="shop.html">Shop</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
-										<li><a href="single-product.html">Single Product</a></li>
-										<li><a href="cart.html">Cart</a></li>
-									</ul>
-								</li>
-								<li>
-									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-									</div>
-								</li>
-							</ul>
-						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-						<div class="mobile-menu"></div>
-						<!-- menu end -->
+					<!-- menu start -->
+          <nav class="main-menu">
+            <ul>
+                <li><a href="{{ url('/') }}">Inicio </a></li>
+                <li><a href="{{ route('about') }}">Nosotros</a></li>
+                <li><a href="{{route('blog')}}">Blog</a></li>
+                <li><a href="{{ route('Contacto') }}">Contacto</a></li>
+                <li><a href="{{ route('shop.shop') }}">Shop</a></li>
+                <li>
+                    <div class="header-icons">
+                        <a class="shopping-cart" href="{{ route('cart.carrito') }}"><i
+                                class="fas fa-shopping-cart"></i></a>
+                        <a class="user-icon" id="user-icon"><i class='fas fa-user'></i></a>
+                        <!-- Opciones de usuario -->
+                        <div class="user-options" id="user-options">
+                            <ul>
+
+                              @if (!Auth::check())
+                              <li><a href="{{ route('login') }}">Iniciar sesión</a></li>
+                          @endif
+                                <li><a href="{{route('profile.edit')}}">Perfil</a></li>
+                                <li>
+                                  @if (Auth::check())
+                                  <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                  <li><a  href="{{route('logout')}}" onclick="event.preventDefault();
+                                    this.closest('form').submit();">Cerrar sesión</a></li>
+                                  </form>
+                                  @endif
+                                </li>
+
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+        <div class="mobile-menu"></div>
+        <!-- menu end -->
 					</div>
 				</div>
 			</div>
@@ -204,7 +210,7 @@
     	<div class="container">
         	<h3>Haz de la cremosidad <br> tu <span class="orange-text">felicidad.</span></h3>
             <div class="sale-percent"><span>Solo <br> por</span> $80<span>mxn</span></div>
-            <a href="shop.html" class="cart-btn btn-lg">Comprar ahora</a>
+            <a href="{{route('shop.shop')}}" class="cart-btn btn-lg">Comprar ahora</a>
         </div>
     </section>
 	<!-- end shop banner -->
@@ -437,3 +443,24 @@
 
 </body>
 </html>
+@endsection
+<script>
+  document.getElementById('user-icon').addEventListener('click', function() {
+      var userOptions = document.getElementById('user-options');
+      if (userOptions.style.display === 'none' || userOptions.style.display === '') {
+          userOptions.style.display = 'block';
+      } else {
+          userOptions.style.display = 'none';
+      }
+  });
+
+  // Cerrar las opciones de usuario si se hace clic fuera de ellas
+  document.addEventListener('click', function(event) {
+      var userOptions = document.getElementById('user-options');
+      var userIcon = document.getElementById('user-icon');
+
+      if (event.target !== userIcon && event.target !== userOptions) {
+          userOptions.style.display = 'none';
+      }
+  });
+</script>
